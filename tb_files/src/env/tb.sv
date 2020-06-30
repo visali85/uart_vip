@@ -42,6 +42,7 @@ class tb extends uvm_env;
 	extern function new ( string name="tb", uvm_component parent);
 	extern function void build_phase(uvm_phase phase);
 	extern function void connect_phase(uvm_phase phase);
+	extern function void end_of_elobaration_phase(uvm_phase phase);
 endclass
 
 
@@ -99,7 +100,7 @@ function void tb::connect_phase (uvm_phase phase);
 	 for(int i=0; i<e_cfg.no_of_wagent; i++)
 	 begin
 	 v_seqrh.master_seqrh[i] = wtop.wagent[i].m_sequencer;
-	 wtop.wagent[i].monh.monitor_port.connect(sb.wfifo[i].analysis_export);
+	 wtop.wagent[i].monh.monitor_port.connect(sb.wrh[i].analysis_export);
   	 end
 	end
 			
@@ -107,10 +108,12 @@ function void tb::connect_phase (uvm_phase phase);
  	begin
 	 for(int i=0; i<e_cfg.no_of_ragent; i++)
 	 begin
-   	 rtop.ragent[i].monh.monitor_port.connect(sb.rfifo[i].analysis_export);
+   	 rtop.ragent[i].monh.monitor_port.connect(sb.rdh[i].analysis_export);
 	 v_seqrh.slave_seqrh[i] = rtop.ragent[i].m_sequencer;
 	 end
 	end
 endfunction:connect_phase
 
-
+function void tb::end_of_elobaration_phase (uvm_phase phase);
+	uvm_top.print_topology();
+endfunction:end_of_elobaration_phase

@@ -23,6 +23,7 @@
 //module:top
 //This provide the information about instantiating test_pkg,interface,and running the base test
 //-------------------------------------------------------------------------------------------------
+`include "uart_if.sv"
 module top;
 	
 	import test_pkg::*;

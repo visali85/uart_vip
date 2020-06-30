@@ -39,7 +39,8 @@ class slave_xtn extends uvm_sequence_item;
 
   //bit tx;
   //bit rx;
-  bit [7:0] rx_data;
+  bit [7:0] rx;
+  bit [7:0] da;
 	
 		extern function new(string name = "slave_xtn");
 		extern function void do_print(uvm_printer printer);

@@ -37,6 +37,7 @@ class base_test extends uvm_test;
        	 env_config e_cfg;
 	 master_agent_config w_cfg[];
 	 slave_agent_config r_cfg[];
+	 v_seq1 vseq;
 
          int no_of_ragent = 1;
  	 int no_of_wagent=1;
@@ -134,6 +135,9 @@ endfunction:build_phase
   //--------------------------------------------------------------------------------
 
 task base_test::run_phase(uvm_phase phase);
+
+     v_seq1 vseq = v_seq1::type_id::create("vseq");
+     vseq.start(envh.v_seqrh);
       phase.raise_objection(this);
       #10;
       phase.drop_objection(this);

@@ -124,11 +124,11 @@ endclass
 		forever
     begin
 		data_sent=slave_xtn::type_id::create("data_sent");
-    data_sent.rx=vif.slavedrv_cb.rx;
+    data_sent.rx=vif.slavemon_cb.rx;
     #((vif.bit_time)/2);
     for(int i=0;i<8;i++)
     begin
-      data_sent.da[i]=vif.slavedrv_cb.da[i];
+      data_sent.da[i]=vif.slavemon_cb.da[i];
       #(vif.bit_time);
     end
     monitor_port.write(data_sent);

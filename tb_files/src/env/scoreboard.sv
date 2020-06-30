@@ -69,11 +69,11 @@ endfunction
 //This will execute all its methods in zero simulation time
 //-----------------------------------------------------------------------------
 function void build_phase(uvm_phase phase);
-if(!uvm_config_db#(env_config)::get(this,"","ENV_CONFIG",ecfg))
+if(!uvm_config_db#(env_config)::get(this,"","env_config",ecfg))
   `uvm_error("SB","COULDNT GET")
 
-wrh=new[ecfg.no_of_wagt];
-rdh=new[ecfg.no_of_ragt];
+wrh=new[ecfg.no_of_wagent];
+rdh=new[ecfg.no_of_ragent];
 
 foreach(wrh[i])
 wrh[i]=new($sformatf("wrh[%0d]",i),this);

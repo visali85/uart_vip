@@ -116,21 +116,21 @@ endtask:run_phase
 task master_driver::drive_data(master_xtn xtn);
 
 // Start condition
-        vif.masterdrv_cb.tx=1'b0;
+        vif.masterdrv_cb.tx<=1'b0;
         #(bit_time);
 
 // Driving the data
 // TODO: Need to support for 5,6,7,8 bit data
 	for(int i=0;i<8;i++)
   	begin
-  	vif.masterdrv_cb.tx = req.da[i];
+  	vif.masterdrv_cb.tx <= req.da[i];
   	#(bit_time);
   	end
 
 // TODO: Parity bit calculation and drive it
 	
 // Stop condition
-  	vif.masterdrv_cb.tx=1'b1;
+  	vif.masterdrv_cb.tx<=1'b1;
   	#(bit_time);
 
 endtask: drive_data

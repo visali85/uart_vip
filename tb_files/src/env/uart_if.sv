@@ -26,7 +26,7 @@ interface uart_if(input reset);
   logic rx;
 
 // TODO: The below signals should be in driver
-//logic da[8];
+logic da[8];
 //real bit_time;
   
 
@@ -47,7 +47,7 @@ endclocking
 //clocking block for slave driver
 clocking slavedrv_cb@(negedge rx);
     output da;
-    output rx;
+    input rx;
 endclocking
 
 //clocking block for slave monitor

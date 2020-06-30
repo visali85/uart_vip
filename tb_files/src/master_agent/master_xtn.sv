@@ -27,7 +27,8 @@ class master_xtn extends uvm_sequence_item;
 //Factory Method in UVM enables us to register a class, object and variables inside the factory
 	`uvm_object_utils(master_xtn)
 
-  	rand bit [7:0] tx_data;
+  	rand bit [7:0] tx;
+	rand bit [7:0] da;
 
 //---------------------------------------------------------------------------------------------
 //Defining external tasks and functions

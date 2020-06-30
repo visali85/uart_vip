@@ -55,9 +55,10 @@ package test_pkg;
 
   `include "../src/env/virtual_sequencer.sv"
   `include "../src/env/virtual_seqs.sv"
-
+  `include "../src/env/v_seq1.sv"
+  `include "../src/env/scoreboard.sv"
   `include "../src/env/tb.sv"
-  `include "scoreboard.sv"
+  
 
   `include "../src/test/base_test.sv"
 endpackage

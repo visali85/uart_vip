@@ -113,15 +113,16 @@ task master_monitor::collect_data();
   	forever
   	begin
   	data_sent=master_xtn::type_id::create("data_sent");
-  	data_sent.tx=vif.masterdrv_cb.tx;
+  	data_sent.tx=vif.mastermon_cb.tx;
   	#(m_drv.bit_time)
   	for(int i=0;i<8;i++)
    	begin
-   	data_sent.da[i]=vif.masterdrv_cb.da[i];
+   	data_sent.da[i]=vif.mastermon_cb.da[i];
    	#(m_drv.bit_time);
    	end
   	@(vif.mastermon_cb);
   	monitor_port.write(data_sent);
+	data_sent.print();
   	end
 endtask:collect_data
 
