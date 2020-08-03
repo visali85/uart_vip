@@ -35,6 +35,7 @@ class base_test extends uvm_test;
 //Declaring handles for different components
     	 tb envh;
        	 env_config e_cfg;
+	 uart_config cfg;
 	 master_agent_config w_cfg[];
 	 slave_agent_config r_cfg[];
 	 v_seq1 vseq;
@@ -43,13 +44,14 @@ class base_test extends uvm_test;
  	 int no_of_wagent=1;
          int has_ragent = 1;
          int has_wagent = 1;
-
   //---------------------------------------------
   // Externally defined tasks and functions
   //---------------------------------------------
 	extern function new(string name = "base_test" , uvm_component parent);
 	extern function void configuration();
 	extern function void build_phase(uvm_phase phase);
+	extern task reset_phase(uvm_phase phase);
+	extern task pre_reset_phase(uvm_phase phase);
   	extern task run_phase(uvm_phase phase);
 endclass:base_test
 
@@ -61,7 +63,10 @@ endclass:base_test
 // Parameters:
 //  name - instance name of the config_template
 //  parent - parent under which this component is created
-//-----------------------------------------------------------------------------
+//--------------
+
+
+//---------------------------------------------------------------
 function base_test::new(string name = "base_test" , uvm_component parent);
 	super.new(name,parent);
 endfunction:new
@@ -81,7 +86,7 @@ function void base_test::configuration();
 	 foreach(w_cfg[i]) 
 	 	begin
          	w_cfg[i]=master_agent_config::type_id::create($sformatf("w_cfg[%0d]", i));
-	  	if(!uvm_config_db #(virtual uart_if)::get(this,"", $sformatf("vif_%0d",i),w_cfg[i].vif))
+	  	if(!uvm_config_db #(virtual uart_if)::get(this,"","vif_0",w_cfg[i].vif))
 	  	`uvm_fatal("VIF CONFIG","cannot get()interface vif from uvm_config_db. Have you set() it?") 
 	  	w_cfg[i].is_active = UVM_ACTIVE;
           	e_cfg.w_cfg[i] = w_cfg[i];
@@ -94,7 +99,7 @@ function void base_test::configuration();
 	 foreach(r_cfg[i]) 
 	 	begin
          	r_cfg[i]=slave_agent_config::type_id::create($sformatf("r_cfg[%0d]",i));
-	 	if(!uvm_config_db #(virtual uart_if)::get(this,"",$sformatf("vif_%0d",i),r_cfg[i].vif))
+	 	if(!uvm_config_db #(virtual uart_if)::get(this,"","vif_0",r_cfg[i].vif))
 	 	`uvm_fatal("VIF CONFIG","cannot get() interface vif from uvm_config_db. Have you set() it?")
 	 	r_cfg[i].is_active = UVM_ACTIVE;
 	 	e_cfg.r_cfg[i]=r_cfg[i]; 
@@ -117,15 +122,21 @@ function void base_test::configuration();
 //-----------------------------------------------------------------------------
 function void base_test::build_phase(uvm_phase phase);
 	e_cfg=env_config::type_id::create("e_cfg");
-               
+        cfg=uart_config::type_id::create("cfg");
+        if (!cfg.randomize())
+         `uvm_error("RNDFAIL", "Could not randomize uart_config using default values")
+      `uvm_info(get_type_name(), {"Printing cfg:\n", cfg.sprint()}, UVM_MEDIUM)
+ 
 	if(has_wagent)
         e_cfg.w_cfg = new[no_of_wagent];
           
 	if(has_ragent)
         e_cfg.r_cfg = new[no_of_ragent];
 
+
     	configuration();
 	uvm_config_db #(env_config)::set(this,"*","env_config",e_cfg);
+	uvm_config_db #(uart_config)::set(this,"*","cfg",cfg);
         super.build_phase(phase);
 	envh=tb::type_id::create("envh", this);
 endfunction:build_phase
@@ -133,12 +144,21 @@ endfunction:build_phase
   //--------------------------------------------------------------------------------
   //Task:run_phase
   //--------------------------------------------------------------------------------
+task base_test::pre_reset_phase(uvm_phase phase);
+	`uvm_info("","BASE TEST PRE RESET PHASE",UVM_LOW)
+endtask
+
+task base_test::reset_phase(uvm_phase phase);
+	`uvm_info("","BASE TEST RESET PHASE",UVM_LOW)
+endtask
 
 task base_test::run_phase(uvm_phase phase);
-
-     v_seq1 vseq = v_seq1::type_id::create("vseq");
-     vseq.start(envh.v_seqrh);
+	v_seq1 vseq = v_seq1::type_id::create("vseq");
+	vseq.print();
+     `uvm_info(get_type_name(),"BASE TEST RUN PHASE",UVM_LOW)
       phase.raise_objection(this);
+      `uvm_info(get_type_name(),"TEST STARTED",UVM_LOW)
+      vseq.start(envh.v_seqrh);
       #10;
       phase.drop_objection(this);
 endtask

@@ -52,16 +52,20 @@ endfunction:new
 //This gives the information about the starting of driver sequencer handshake mechanism
 //-----------------------------------------------------------------------------------------------
 task master_seqs::body();
-  	req=master_xtn::type_id::create("req");
- 	repeat(1)
+
+	req=master_xtn::type_id::create("req");
+ 	//repeat(1)
+        for(int i=0;i<5;i++)
   	begin
-  	start_item(req);
-  	if(! (req.randomize()) 
-   	begin
-  	`uvm_error(get_type_name(), "Not able to randomize req\n")
-   	end
+  		start_item(req);
+  		if(! (req.randomize())) 
+   		begin
+  			`uvm_error(get_type_name(), "Not able to randomize req\n")
+   		end
   	finish_item(req);
+	req.print();
   	end
+	
 endtask
 
 

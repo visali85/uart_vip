@@ -1,13 +1,13 @@
 
+//Virtual sequence for uart TX
 
-// Author : Visalidodd@mirafra.com
 
 class v_seq1 extends vbase_seq;
 
 	`uvm_object_utils(v_seq1)
 	master_seqs uart_seq;
 	function new(string name= "v_seq1");
-		super.new(name);
+	super.new(name);
 	endfunction
 
 virtual task body();

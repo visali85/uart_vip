@@ -20,13 +20,37 @@
 //`ifndef _uart_if_INCLUDED_
 //`define _uart_if_INCLUDED_
 
-interface uart_if(input reset);
+interface uart_if(input clock,input reset);
+
+ logic txd;    // Transmit Data
+  logic rxd;    // Receive Data
+  
+  logic intrpt;  // Interrupt
+
+  logic ri_n;    // ring indicator
+  logic cts_n;   // clear to send
+  logic dsr_n;   // data set ready
+  logic rts_n;   // request to send
+  logic dtr_n;   // data terminal ready
+  logic dcd_n;   // data carrier detect
+
+  logic baud_clk;  // Baud Rate Clock
+  
+  // Control flags
+  bit                has_checks = 1;
+  bit                has_coverage = 1;
 
   logic tx;
   logic rx;
-
+  logic tx_o;
+  logic busy_o;
+  logic cfg_en_i;
+  logic [1:0] cfg_bits_i;
+  logic [15:0]cfg_div_i; 
+  logic tx_valid_i;
+  logic tx_ready_o;
 // TODO: The below signals should be in driver
-logic da[8];
+logic [7:0] da;
 //real bit_time;
   
 
@@ -39,7 +63,7 @@ endclocking
 
 //clocking block for master monitor
 clocking mastermon_cb@(negedge tx);
-    input tx;
+    input tx_o;
     input rx;
     input da;
 endclocking
@@ -62,7 +86,8 @@ modport MDRIV_MP(clocking masterdrv_cb, input reset);
 modport MMON_MP(clocking mastermon_cb, input reset);
 modport SDRV_MP(clocking slavedrv_cb, input reset);
 modport SMON_MP(clocking slavemon_cb, input reset);
-    
+ 
+   
 endinterface
 
 
